@@ -31,7 +31,7 @@ echo "Certbot finished. Killing http server..."
 
 echo "Finiding certs. Exiting if certs are not found ..."
 CERTPATH=/etc/letsencrypt/live/$(echo $DOMAINS | cut -f1 -d',')
-ls $CERTPATH || exit 1
+ls $CERTPATH || /var/log/letsencrypt/letsencrypt.log; exit 1
 
 echo "Creating update for secret..."
 cat /secret-patch-template.json | \
@@ -42,7 +42,7 @@ cat /secret-patch-template.json | \
 	> /secret-patch.json
 
 echo "Checking json file exists. Exiting if not found..."
-ls /secret-patch.json || exit 1
+ls /secret-patch.json || /var/log/letsencrypt/letsencrypt.log; exit 1
 
 # Update Secret
 echo "Updating secret..."

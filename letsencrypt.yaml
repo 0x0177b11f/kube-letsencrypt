@@ -37,7 +37,7 @@ spec:
               value: letsencrypt-certs
             - name: STAGING
               value: "1"
-          restartPolicy: OnFailure
+          restartPolicy: Never
 ---
 apiVersion: v1
 kind: Service
