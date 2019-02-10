@@ -17,26 +17,23 @@ echo " EMAIL: $EMAIL"
 echo " DOMAINS: $DOMAINS"
 echo " SECRET: $SECRET"
 
-sleep 10
-
 NAMESPACE=$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace)
 echo "Current Kubernetes namespce: $NAMESPACE"
 
 echo "Starting HTTP server..."
 python3 -m http.server 80 &
 PID=$!
+sleep 10
 
 echo "Starting certbot..."
 certbot certonly --webroot -w $HOME -d ${DOMAINS} --agree-tos --email ${EMAIL} ${TEST_CERT} --no-self-upgrade
-
-sleep 60
 
 kill $PID
 echo "Certbot finished. Killing http server..."
 
 echo "Finiding certs. Exiting if certs are not found ..."
 CERTPATH=/etc/letsencrypt/live/$(echo $DOMAINS | cut -f1 -d',')
-ls $CERTPATH || exit 1
+ls $CERTPATH || echo "Error"; sleep 600; exit 1
 
 echo "Creating update for secret..."
 cat /secret-patch-template.json | \
@@ -47,7 +44,7 @@ cat /secret-patch-template.json | \
 	> /secret-patch.json
 
 echo "Checking json file exists. Exiting if not found..."
-ls /secret-patch.json || exit 1
+ls /secret-patch.json || echo "Error"; sleep 600; exit 1
 
 # Update Secret
 echo "Updating secret..."
