@@ -1,8 +1,7 @@
 FROM alpine:3.9
 
 RUN apk update && \
-    apk add certbot tini && \
-    apk cache clean
+    apk add --no-cache certbot tini
 
 ENTRYPOINT ["/sbin/tini", "--"]
 
