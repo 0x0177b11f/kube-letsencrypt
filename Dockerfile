@@ -1,8 +1,10 @@
 FROM alpine:3.9
 
 RUN apk update && \
-    apk add certbot && \
+    apk add --no-cache certbot tini && \
     apk cache clean
+
+ENTRYPOINT ["/sbin/tini", "--"]
 
 RUN mkdir /etc/letsencrypt
 
