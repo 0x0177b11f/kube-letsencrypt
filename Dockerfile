@@ -1,7 +1,7 @@
 FROM alpine:3.9
 
 RUN apk update && \
-    apk add --no-cache certbot tini bash
+    apk add --no-cache certbot tini bash curl
 
 ENTRYPOINT ["/sbin/tini", "--"]
 
