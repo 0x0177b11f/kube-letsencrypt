@@ -29,7 +29,7 @@ PID=$!
 echo "Starting certbot..."
 certbot certonly --webroot -w $HOME -d ${DOMAINS} --agree-tos --email ${EMAIL} ${TEST_CERT} --no-self-upgrade
 
-sleep 30
+sleep 60
 
 kill $PID
 echo "Certbot finished. Killing http server..."
