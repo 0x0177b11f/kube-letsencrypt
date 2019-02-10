@@ -25,8 +25,12 @@ echo "Current Kubernetes namespce: $NAMESPACE"
 echo "Starting HTTP server..."
 python3 -m http.server 80 &
 PID=$!
+
 echo "Starting certbot..."
-certbot certonly --webroot -w $HOME -d ${DOMAINS} --agree-tos --email ${EMAIL} ${TEST_CERT} --no-self-upgrade 
+certbot certonly --webroot -w $HOME -d ${DOMAINS} --agree-tos --email ${EMAIL} ${TEST_CERT} --no-self-upgrade
+
+sleep 30
+
 kill $PID
 echo "Certbot finished. Killing http server..."
 
