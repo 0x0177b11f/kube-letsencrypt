@@ -17,6 +17,7 @@ echo " EMAIL: $EMAIL"
 echo " DOMAINS: $DOMAINS"
 echo " SECRET: $SECRET"
 
+sleep 10
 
 NAMESPACE=$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace)
 echo "Current Kubernetes namespce: $NAMESPACE"
