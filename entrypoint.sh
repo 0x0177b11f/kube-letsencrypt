@@ -8,10 +8,6 @@ if [[ -z $EMAIL || -z $DOMAINS || -z $SECRET ]]; then
 	exit 1
 fi
 
-if [[ -z $STAGING ]]; then
-    export TEST_CERT="--staging"
-fi
-
 cat_log_and_deply_exit() {
     echo "Error"
     cat /var/log/letsencrypt/letsencrypt.log
@@ -33,7 +29,7 @@ PID=$!
 sleep 10
 
 echo "Starting certbot..."
-certbot certonly --webroot -w $HOME -d ${DOMAINS} --agree-tos --email ${EMAIL} ${TEST_CERT} --no-self-upgrade
+certbot certonly --webroot -w $HOME -d ${DOMAINS} --agree-tos --email ${EMAIL} --no-self-upgrade
 
 kill $PID
 echo "Certbot finished. Killing http server..."
