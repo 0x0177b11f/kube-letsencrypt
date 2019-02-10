@@ -12,6 +12,13 @@ if [[ -z $STAGING ]]; then
     export TEST_CERT="--staging"
 fi
 
+cat_log_and_deply_exit() {
+    echo "Error"
+    cat /var/log/letsencrypt/letsencrypt.log
+    sleep 60
+    exit 1
+}
+
 echo "Inputs:"
 echo " EMAIL: $EMAIL"
 echo " DOMAINS: $DOMAINS"
@@ -33,7 +40,7 @@ echo "Certbot finished. Killing http server..."
 
 echo "Finiding certs. Exiting if certs are not found ..."
 CERTPATH=/etc/letsencrypt/live/$(echo $DOMAINS | cut -f1 -d',')
-ls $CERTPATH || echo "Error"; sleep 600; exit 1
+ls $CERTPATH || cat_log_and_deply_exit
 
 echo "Creating update for secret..."
 cat /secret-patch-template.json | \
@@ -44,7 +51,7 @@ cat /secret-patch-template.json | \
 	> /secret-patch.json
 
 echo "Checking json file exists. Exiting if not found..."
-ls /secret-patch.json || echo "Error"; sleep 600; exit 1
+ls /secret-patch.json || cat_log_and_deply_exit
 
 # Update Secret
 echo "Updating secret..."
