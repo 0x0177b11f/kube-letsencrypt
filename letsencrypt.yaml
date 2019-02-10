@@ -1,3 +1,34 @@
+---
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  namespace: default
+  name: letsencrypt-certs-role
+rules:
+- apiGroups: [""]
+  resources: ["secrets"]
+  verbs: ["update", "patch"]
+---
+kind: ServiceAccount
+apiVersion: v1
+metadata:
+  namespace: default
+  name: letsencrypt-certs-updater
+automountServiceAccountToken: true
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: letsencrypt-certs-binding
+subjects:
+- kind: ServiceAccount
+  name: letsencrypt-certs-updater
+  namespace: default
+roleRef:
+  kind: Role
+  name: letsencrypt-certs-role
+  apiGroup: ""
+---
 apiVersion: v1
 kind: Secret
 metadata:
@@ -23,6 +54,7 @@ spec:
           labels:
             app: letsencrypt
         spec:
+          serviceAccountName: letsencrypt-certs-updater
           containers:
           - image: quay.io/0x0177b11f/kube-letsencrypt:latest
             name: letsencrypt
