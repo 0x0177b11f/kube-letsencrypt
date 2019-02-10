@@ -1,14 +1,15 @@
 FROM alpine:3.9
 
 RUN apk update && \
-    apk add --no-cache certbot tini
+    apk add --no-cache certbot tini bash
 
 ENTRYPOINT ["/sbin/tini", "--"]
 
-RUN mkdir /etc/letsencrypt
-
 COPY secret-patch-template.json /
 COPY entrypoint.sh /
+
+RUN mkdir /etc/letsencrypt
+RUN chmod +x /entrypoint.sh
 
 EXPOSE 80
 
