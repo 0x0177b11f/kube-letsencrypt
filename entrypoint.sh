@@ -8,6 +8,10 @@ if [[ -z $EMAIL || -z $DOMAINS || -z $SECRET ]]; then
 	exit 1
 fi
 
+if [[ -z $STAGING ]]; then
+    export TEST_CERT="--staging"
+fi
+
 echo "Inputs:"
 echo " EMAIL: $EMAIL"
 echo " DOMAINS: $DOMAINS"
@@ -21,7 +25,7 @@ echo "Starting HTTP server..."
 python3 -m http.server 80 &
 PID=$!
 echo "Starting certbot..."
-certbot certonly --webroot -w $HOME -n --agree-tos --email ${EMAIL} --no-self-upgrade -d ${DOMAINS}
+certbot certonly --email ${EMAIL} ${TEST_CERT} --no-self-upgrade --webroot -w $HOME -d ${DOMAINS}
 kill $PID
 echo "Certbot finished. Killing http server..."
 
