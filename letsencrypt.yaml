@@ -5,36 +5,39 @@ metadata:
 type: Opaque
 # Create an empty secret (with no data) in order for the update to work
 ---
-apiVersion: batch/v1
-kind: Job
+apiVersion: batch/v1beta1
+kind: CronJob
 metadata:
   name: letsencrypt-job
   labels:
     app: letsencrypt
 spec:
-  template:
-    metadata:
-      name: letsencrypt
-      labels:
-        app: letsencrypt
+  schedule: "0 0 25 */2 *"
+  jobTemplate:
     spec:
-      containers:
-      - image: quay.io/0x0177b11f/kube-letsencrypt:latest
-        name: letsencrypt
-        imagePullPolicy: Always
-        ports:
-        - name: letsencrypt
-          containerPort: 80
-        env:
-        - name: DOMAINS
-          value: demo.example.com
-        - name: EMAIL
-          value: demo@example.com
-        - name: SECRET
-          value: letsencrypt-certs
-        - name: STAGING
-          value: "1"
-      restartPolicy: Never
+      template:
+        metadata:
+          name: letsencrypt
+          labels:
+            app: letsencrypt
+        spec:
+          containers:
+          - image: quay.io/0x0177b11f/kube-letsencrypt:latest
+            name: letsencrypt
+            imagePullPolicy: Always
+            ports:
+            - name: letsencrypt
+              containerPort: 80
+            env:
+            - name: DOMAINS
+              value: demo.example.com
+            - name: EMAIL
+              value: demo@example.com
+            - name: SECRET
+              value: letsencrypt-certs
+            - name: STAGING
+              value: "1"
+          restartPolicy: OnFailure
 ---
 apiVersion: v1
 kind: Service
