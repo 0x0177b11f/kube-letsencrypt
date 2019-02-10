@@ -25,7 +25,7 @@ echo "Starting HTTP server..."
 python3 -m http.server 80 &
 PID=$!
 echo "Starting certbot..."
-certbot certonly --email ${EMAIL} ${TEST_CERT} --no-self-upgrade --webroot -w $HOME -d ${DOMAINS}
+certbot certonly --webroot -w $HOME -d ${DOMAINS} --agree-tos --email ${EMAIL} ${TEST_CERT} --no-self-upgrade 
 kill $PID
 echo "Certbot finished. Killing http server..."
 
